@@ -34,6 +34,36 @@ function getChord(octave, start, d1, d2) {
     return [sName1, sName2, sName3];
 }
 
+function addEvents(button, chord) {
+    button.addEventListener("mousedown", function () {
+        sampler.triggerAttack(chord);
+    });
+    button.addEventListener("touchstart", function (ev) {
+        sampler.triggerAttack(chord);
+        ev.preventDefault();
+    });
+    button.addEventListener("mouseup", function () {
+        sampler.triggerRelease(chord, Tone.now() + 1);
+    });
+    button.addEventListener("touchend", function (ev) {
+        sampler.triggerRelease(chord, Tone.now() + 1);
+        ev.preventDefault();
+    });
+}
+
+function createButton(name, octave, start, d1, d2) {
+    let button = document.createElement("button");
+    button.innerHTML = start + '+' + d1 + '+' + d2 + '/' + octave + '\n' + name;
+    document.getElementById("buttons").appendChild(button);
+
+    addEvents(button, getChord(octave, start, d1, d2));
+}
+
+createButton("Am", 3, 9, 3, 4);
+createButton("C", 4, 0, 4, 3);
+createButton("G", 4, 7, 4, 3);
+createButton("F", 4, 5, 4, 3);
+
 const sampler = new Tone.Sampler({
     urls: {
         "C4": "C4.mp3",
@@ -45,28 +75,7 @@ const sampler = new Tone.Sampler({
     baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
-function addEvents(name, chord) {
-    document.getElementById(name).addEventListener("mousedown", function () {
-        sampler.triggerAttack(chord);
-    });
-    document.getElementById(name).addEventListener("touchstart", function (ev) {
-        sampler.triggerAttack(chord);
-        ev.preventDefault();
-    });
-    document.getElementById(name).addEventListener("mouseup", function () {
-        sampler.triggerRelease(chord, Tone.now() + 1);
-    });
-    document.getElementById(name).addEventListener("touchend", function (ev) {
-        sampler.triggerRelease(chord, Tone.now() + 1);
-        ev.preventDefault();
-    });
-}
-
 Tone.loaded().then(() => {
-    addEvents("Am", getChord(3, 9, 3, 4));
-    addEvents("C", getChord(4, 0, 4, 3));
-    addEvents("G", getChord(4, 7, 4, 3));
-    addEvents("F", getChord(4, 5, 4, 3));
-
     document.getElementById("buttons").removeAttribute("disabled");
 });
+
