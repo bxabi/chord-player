@@ -1,3 +1,21 @@
 button {
   width: 100px;
 }
+
+:root {
+  --absoluteNoteNumbers: block;
+  --relativeNoteNumbers: block;
+  --octaves: block;
+}
+
+p.absoluteNoteNumbers {
+  display: var(--absoluteNoteNumbers);
+}
+
+p.relativeNoteNumbers {
+  display: var(--relativeNoteNumbers);
+}
+
+p.octaves {
+  display: var(--octaves);
+}

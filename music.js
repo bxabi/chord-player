@@ -51,18 +51,42 @@ function addEvents(button, chord) {
     });
 }
 
-function createButton(name, octave, start, d1, d2) {
+function createButtonRelative(name, octave, start, d1, d2) {
     let button = document.createElement("button");
-    button.innerHTML = start + '+' + d1 + '+' + d2 + '/' + octave + '\n' + name;
+    button.innerHTML = '<p>' + name + '</p>' +
+        '<p class="relativeNoteNumbers">' + start + '+' + d1 + '+' + d2 + "</p>" +
+        '<p class="absoluteNoteNumbers">' + start + '-' + (start + d1) + '-' + (start + d1 + d2) + "</p>" +
+        '<p class="octaves">' + octave + "</p>";
     document.getElementById("buttons").appendChild(button);
 
     addEvents(button, getChord(octave, start, d1, d2));
 }
 
-createButton("Am", 3, 9, 3, 4);
-createButton("C", 4, 0, 4, 3);
-createButton("G", 4, 7, 4, 3);
-createButton("F", 4, 5, 4, 3);
+function createButtonAbsolute(name, octave, s1, s2, s3) {
+    let button = document.createElement("button");
+    button.innerHTML = '<p>' + name + '</p>' +
+        '<p class="relativeNoteNumbers">' + s1 + '+' + (s2 - s1) + '+' + (s3 - s2) + "</p>" +
+        '<p class="absoluteNoteNumbers">' + s1 + '-' + s2 + '-' + s3 + "</p>" +
+        '<p class="octaves">' + octave + "</p>";
+    document.getElementById("buttons").appendChild(button);
+
+    addEvents(button, getChord(octave, s1, s2 - s1, s3 - s2));
+}
+
+createButtonRelative("Am", 3, 9, 3, 4);
+createButtonRelative("C", 4, 0, 4, 3);
+createButtonRelative("G", 4, 7, 4, 3);
+createButtonRelative("F", 4, 5, 4, 3);
+
+let hr = document.createElement("hr");
+document.getElementById("buttons").appendChild(hr);
+
+createButtonAbsolute("WA1", 4, 4, 7, 11);
+createButtonAbsolute("WA2", 4, 2, 7, 11);
+createButtonAbsolute("WA3", 4, 2, 6, 9);
+createButtonAbsolute("WA4", 4, 1, 4, 9);
+createButtonAbsolute("WA5", 4, 3, 6, 11);
+createButtonAbsolute("WA6", 4, 0, 4, 7);
 
 const sampler = new Tone.Sampler({
     urls: {
@@ -79,3 +103,12 @@ Tone.loaded().then(() => {
     document.getElementById("buttons").removeAttribute("disabled");
 });
 
+var root = document.querySelector(':root');
+
+function toggleStyle(name) {
+    let val = getComputedStyle(root).getPropertyValue(name);
+    if (val == 'none')
+        val = 'block';
+    else val = 'none';
+    root.style.setProperty(name, val);
+}
