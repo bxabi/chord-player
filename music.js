@@ -14,6 +14,9 @@ const sounds = new Map([
     [12, 'C']
 ]);
 
+const buttonWidth = window.innerWidth / 6 - 2;
+const buttonHeight = window.innerHeight / 6 - 2;
+
 function getChord(octave, start, d1, d2) {
     const sName1 = sounds.get(start) + octave;
 
@@ -24,14 +27,18 @@ function getChord(octave, start, d1, d2) {
     }
     const sName2 = sounds.get(s2) + octave;
 
-    var s3 = s2 + d2;
-    if (s3 > 11) {
-        s3 = s3 - 12;
-        octave++;
+    if (d2) {
+        var s3 = s2 + d2;
+        if (s3 > 11) {
+            s3 = s3 - 12;
+            octave++;
+        }
+        const sName3 = sounds.get(s3) + octave;
+        return [sName1, sName2, sName3];
     }
-    const sName3 = sounds.get(s3) + octave;
 
-    return [sName1, sName2, sName3];
+    // we only have 2 sounds
+    return [sName1, sName2];
 }
 
 function addEvents(button, chord) {
@@ -51,42 +58,49 @@ function addEvents(button, chord) {
     });
 }
 
+function setPosition(button, x, y) {
+    button.style.setProperty("left", x * buttonWidth + "px");
+    button.style.setProperty("width", buttonWidth + "px");
+
+    button.style.setProperty("top", y * buttonHeight + "px");
+    button.style.setProperty("height", buttonHeight + "px");
+}
+
 function createButtonRelative(name, octave, start, d1, d2) {
     let button = document.createElement("button");
-    button.innerHTML = '<p>' + name + '</p>' +
-        '<p class="relativeNoteNumbers">' + start + '+' + d1 + '+' + d2 + "</p>" +
-        '<p class="absoluteNoteNumbers">' + start + '-' + (start + d1) + '-' + (start + d1 + d2) + "</p>" +
-        '<p class="octaves">' + octave + "</p>";
+    let content = '<p>' + name + '</p>';
+    content += '<p class="relativeNoteNumbers">' + start + '+' + d1;
+    if (d2)
+        content += '+' + d2;
+    content += "</p>";
+    button.innerHTML = content;
+    //        '<p class="octaves">' + octave + "</p>";
     document.getElementById("buttons").appendChild(button);
 
     addEvents(button, getChord(octave, start, d1, d2));
+    return button;
 }
 
-function createButtonAbsolute(name, octave, s1, s2, s3) {
-    let button = document.createElement("button");
-    button.innerHTML = '<p>' + name + '</p>' +
-        '<p class="relativeNoteNumbers">' + s1 + '+' + (s2 - s1) + '+' + (s3 - s2) + "</p>" +
-        '<p class="absoluteNoteNumbers">' + s1 + '-' + s2 + '-' + s3 + "</p>" +
-        '<p class="octaves">' + octave + "</p>";
-    document.getElementById("buttons").appendChild(button);
+for (i = 0; i < 6; ++i) {
+    let button = createButtonRelative(sounds.get(i), 4, i, 4, 3);
+    setPosition(button, i, 0);
 
-    addEvents(button, getChord(octave, s1, s2 - s1, s3 - s2));
+    button = createButtonRelative(sounds.get(i) + "m", 4, i, 3, 4);
+    setPosition(button, i, 1);
+
+    button = createButtonRelative(sounds.get(i) + "5", 4, i, 7);
+    setPosition(button, i, 2);
+
+    button = createButtonRelative(sounds.get(i + 6), 4, i + 6, 4, 3);
+    setPosition(button, i, 3);
+
+    button = createButtonRelative(sounds.get(i + 6) + "m", 4, i + 6, 3, 4);
+    setPosition(button, i, 4);
+
+    button = createButtonRelative(sounds.get(i + 6) + "5", 4, i + 6, 7);
+    setPosition(button, i, 5);
 }
 
-createButtonRelative("Am", 3, 9, 3, 4);
-createButtonRelative("C", 4, 0, 4, 3);
-createButtonRelative("G", 4, 7, 4, 3);
-createButtonRelative("F", 4, 5, 4, 3);
-
-let hr = document.createElement("hr");
-document.getElementById("buttons").appendChild(hr);
-
-createButtonAbsolute("WA1", 4, 4, 7, 11);
-createButtonAbsolute("WA2", 4, 2, 7, 11);
-createButtonAbsolute("WA3", 4, 2, 6, 9);
-createButtonAbsolute("WA4", 4, 1, 4, 9);
-createButtonAbsolute("WA5", 4, 3, 6, 11);
-createButtonAbsolute("WA6", 4, 0, 4, 7);
 
 const sampler = new Tone.Sampler({
     urls: {
@@ -103,12 +117,12 @@ Tone.loaded().then(() => {
     document.getElementById("buttons").removeAttribute("disabled");
 });
 
-var root = document.querySelector(':root');
+// var root = document.querySelector(':root');
 
-function toggleStyle(name) {
-    let val = getComputedStyle(root).getPropertyValue(name);
-    if (val == 'none')
-        val = 'block';
-    else val = 'none';
-    root.style.setProperty(name, val);
-}
+// function toggleStyle(name) {
+//     let val = getComputedStyle(root).getPropertyValue(name);
+//     if (val == 'none')
+//         val = 'block';
+//     else val = 'none';
+//     root.style.setProperty(name, val);
+// }

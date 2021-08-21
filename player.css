@@ -1,21 +1,25 @@
-button {
-  width: 100px;
-}
-
 :root {
-  --absoluteNoteNumbers: block;
+  /* --absoluteNoteNumbers: block; */
   --relativeNoteNumbers: block;
-  --octaves: block;
+  /* --octaves: block; */
 }
 
-p.absoluteNoteNumbers {
+/* p.absoluteNoteNumbers {
   display: var(--absoluteNoteNumbers);
-}
+} */
 
 p.relativeNoteNumbers {
   display: var(--relativeNoteNumbers);
 }
 
-p.octaves {
+/* p.octaves {
   display: var(--octaves);
+} */
+
+#buttons {
+  position: relative;
+}
+
+button {
+  position: absolute;
 }
