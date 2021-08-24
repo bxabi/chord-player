@@ -1,19 +1,10 @@
 :root {
-  /* --absoluteNoteNumbers: block; */
-  --relativeNoteNumbers: block;
-  /* --octaves: block; */
+  --buttonWidth: 0px;
+  --buttonHeight: 0px;
 }
 
-/* p.absoluteNoteNumbers {
-  display: var(--absoluteNoteNumbers);
-} */
-
-p.relativeNoteNumbers {
+/* p.relativeNoteNumbers {
   display: var(--relativeNoteNumbers);
-}
-
-/* p.octaves {
-  display: var(--octaves);
 } */
 
 #buttons {
@@ -22,4 +13,18 @@ p.relativeNoteNumbers {
 
 button {
   position: absolute;
+  width: calc(-4px + var(--buttonWidth));
+  height: var(--buttonHeight);
+}
+
+button.row1 {
+  background-color: #fffcb0;
+}
+
+button.row2 {
+  background-color: #89cff0;
+}
+
+button.row3 {
+  background-color: #afe1af;
 }

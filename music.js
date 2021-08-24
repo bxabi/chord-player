@@ -14,8 +14,19 @@ const sounds = new Map([
     [12, 'C']
 ]);
 
-const buttonWidth = window.innerWidth / 6 - 2;
-const buttonHeight = window.innerHeight / 6 - 2;
+var root = document.querySelector(':root');
+
+function resizeButtons() {
+    const buttonWidth = window.innerWidth / 6 - 2;
+    const buttonHeight = (window.innerHeight - 10) / 6 - 2;
+
+    root.style.setProperty("--buttonWidth", buttonWidth + "px");
+    root.style.setProperty("--buttonHeight", buttonHeight + "px");
+};
+
+window.addEventListener("load", resizeButtons);
+window.addEventListener('resize', resizeButtons);
+
 
 function getChord(octave, start, d1, d2) {
     const sName1 = sounds.get(start) + octave;
@@ -37,7 +48,7 @@ function getChord(octave, start, d1, d2) {
         return [sName1, sName2, sName3];
     }
 
-    // we only have 2 sounds
+    // we only have 2 sounds in this case
     return [sName1, sName2];
 }
 
@@ -58,16 +69,19 @@ function addEvents(button, chord) {
     });
 }
 
-function setPosition(button, x, y) {
-    button.style.setProperty("left", x * buttonWidth + "px");
-    button.style.setProperty("width", buttonWidth + "px");
-
-    button.style.setProperty("top", y * buttonHeight + "px");
-    button.style.setProperty("height", buttonHeight + "px");
+function setPosition(button, x, y, heightOffset) {
+    button.style.setProperty("left", "calc(var(--buttonWidth) * " + x + ")");
+    button.style.setProperty("top", "calc(var(--buttonHeight) * " + y + " + " + heightOffset + "px)");
 }
 
 function createButtonRelative(name, octave, start, d1, d2) {
     let button = document.createElement("button");
+    if (name[name.length - 1] == 'm')
+        button.classList.add("row2");
+    else if (name[name.length - 1] == '5')
+        button.classList.add("row3");
+    else button.classList.add("row1");
+
     let content = '<p>' + name + '</p>';
     content += '<p class="relativeNoteNumbers">' + start + '+' + d1;
     if (d2)
@@ -83,22 +97,22 @@ function createButtonRelative(name, octave, start, d1, d2) {
 
 for (i = 0; i < 6; ++i) {
     let button = createButtonRelative(sounds.get(i), 4, i, 4, 3);
-    setPosition(button, i, 0);
+    setPosition(button, i, 0, 0);
 
     button = createButtonRelative(sounds.get(i) + "m", 4, i, 3, 4);
-    setPosition(button, i, 1);
+    setPosition(button, i, 1, 0);
 
     button = createButtonRelative(sounds.get(i) + "5", 4, i, 7);
-    setPosition(button, i, 2);
+    setPosition(button, i, 2, 0);
 
     button = createButtonRelative(sounds.get(i + 6), 4, i + 6, 4, 3);
-    setPosition(button, i, 3);
+    setPosition(button, i, 3, 10);
 
     button = createButtonRelative(sounds.get(i + 6) + "m", 4, i + 6, 3, 4);
-    setPosition(button, i, 4);
+    setPosition(button, i, 4, 10);
 
     button = createButtonRelative(sounds.get(i + 6) + "5", 4, i + 6, 7);
-    setPosition(button, i, 5);
+    setPosition(button, i, 5, 10);
 }
 
 
@@ -116,13 +130,3 @@ const sampler = new Tone.Sampler({
 Tone.loaded().then(() => {
     document.getElementById("buttons").removeAttribute("disabled");
 });
-
-// var root = document.querySelector(':root');
-
-// function toggleStyle(name) {
-//     let val = getComputedStyle(root).getPropertyValue(name);
-//     if (val == 'none')
-//         val = 'block';
-//     else val = 'none';
-//     root.style.setProperty(name, val);
-// }
