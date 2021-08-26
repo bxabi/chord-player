@@ -11,7 +11,7 @@
   position: relative;
 }
 
-button {
+#buttons button {
   position: absolute;
   width: calc(-4px + var(--buttonWidth));
   height: var(--buttonHeight);

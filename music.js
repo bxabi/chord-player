@@ -17,8 +17,10 @@ const sounds = new Map([
 var root = document.querySelector(':root');
 
 function resizeButtons() {
+    document.getElementById("buttons").style.height = window.innerHeight - 50;
+
     const buttonWidth = window.innerWidth / 6 - 2;
-    const buttonHeight = (window.innerHeight - 10) / 6 - 2;
+    const buttonHeight = (window.innerHeight - 60) / 6 - 2;
 
     root.style.setProperty("--buttonWidth", buttonWidth + "px");
     root.style.setProperty("--buttonHeight", buttonHeight + "px");
@@ -27,6 +29,8 @@ function resizeButtons() {
 window.addEventListener("load", resizeButtons);
 window.addEventListener('resize', resizeButtons);
 
+
+SELECTIONMODE = false;
 
 function getChord(octave, start, d1, d2) {
     const sName1 = sounds.get(start) + octave;
@@ -55,6 +59,11 @@ function getChord(octave, start, d1, d2) {
 function addEvents(button, chord) {
     button.addEventListener("mousedown", function () {
         sampler.triggerAttack(chord);
+        if (SELECTIONMODE) {
+            if (button.style.opacity == "1")
+                button.style.opacity = "0.3";
+            else button.style.opacity = "1";
+        }
     });
     button.addEventListener("touchstart", function (ev) {
         sampler.triggerAttack(chord);
@@ -130,3 +139,15 @@ const sampler = new Tone.Sampler({
 Tone.loaded().then(() => {
     document.getElementById("buttons").removeAttribute("disabled");
 });
+
+function selectButtonClicked() {
+    if (!SELECTIONMODE) {
+        document.querySelectorAll("#buttons button").forEach(button => { button.style.opacity = "0.3" });
+    }
+    SELECTIONMODE = !SELECTIONMODE;
+}
+
+function ResetButtonClicked() {
+    document.querySelectorAll("#buttons button").forEach(button => { button.style.opacity = "1" });
+    SELECTIONMODE = fals;
+}
