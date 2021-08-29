@@ -57,25 +57,32 @@ function getChord(octave, start, d1, d2) {
 }
 
 function addEvents(button, chord) {
-    button.addEventListener("mousedown", function () {
+    button.addEventListener("mousedown", function (ev) {
         sampler.triggerAttack(chord);
-        if (SELECTIONMODE) {
-            if (button.style.opacity == "1")
-                button.style.opacity = "0.3";
-            else button.style.opacity = "1";
-        }
     });
     button.addEventListener("touchstart", function (ev) {
         sampler.triggerAttack(chord);
         ev.preventDefault();
     });
+
     button.addEventListener("mouseup", function () {
-        sampler.triggerRelease(chord, Tone.now() + 1);
+        sampler.triggerRelease(chord);
     });
     button.addEventListener("touchend", function (ev) {
-        sampler.triggerRelease(chord, Tone.now() + 1);
+        sampler.triggerRelease(chord);
         ev.preventDefault();
     });
+
+    const selectChord = function () {
+        if (SELECTIONMODE) {
+            if (button.style.opacity == "1")
+                button.style.opacity = "0.3";
+            else button.style.opacity = "1";
+        }
+
+    };
+    button.addEventListener("mousedown", selectChord);
+    button.addEventListener("touchstart", selectChord);
 }
 
 function setPosition(button, x, y, heightOffset) {
@@ -124,6 +131,8 @@ for (i = 0; i < 6; ++i) {
     setPosition(button, i, 5, 10);
 }
 
+
+Tone.context.lookAhead = 0;
 
 const sampler = new Tone.Sampler({
     urls: {
