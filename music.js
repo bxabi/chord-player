@@ -30,8 +30,6 @@ window.addEventListener("load", resizeButtons);
 window.addEventListener('resize', resizeButtons);
 
 
-SELECTIONMODE = false;
-
 function getChord(octave, start, d1, d2) {
     const sName1 = sounds.get(start) + octave;
 
@@ -74,7 +72,7 @@ function addEvents(button, chord) {
     });
 
     const selectChord = function () {
-        if (SELECTIONMODE) {
+        if (document.getElementById("selectChords").checked) {
             if (button.style.opacity == "1")
                 button.style.opacity = "0.3";
             else button.style.opacity = "1";
@@ -149,14 +147,13 @@ Tone.loaded().then(() => {
     document.getElementById("buttons").removeAttribute("disabled");
 });
 
-function selectButtonClicked() {
-    if (!SELECTIONMODE) {
+function selectButtonClicked(ev) {
+    if (ev.checked) {
         document.querySelectorAll("#buttons button").forEach(button => { button.style.opacity = "0.3" });
     }
-    SELECTIONMODE = !SELECTIONMODE;
 }
 
 function ResetButtonClicked() {
     document.querySelectorAll("#buttons button").forEach(button => { button.style.opacity = "1" });
-    SELECTIONMODE = fals;
+    document.getElementById("selectChords").checked = false;
 }
