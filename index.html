@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="player.css">
-    <script src="https://unpkg.com/tone"></script>
+    <script src="tonejs/Tone.js"></script>
 </head>
 
 <body>
@@ -12,7 +12,16 @@
 
     <input id="selectChords" type="checkbox" onclick="selectButtonClicked(this)"></input>
     <label for="selectChords">Select chords for a song</label>
-    <button onclick="ResetButtonClicked()">Reset Selection</button>
+    <button onclick="resetButtonClicked()">Reset Selection</button>
+
+    <div id="instruments">
+        <input type="radio" id="piano" name="instrument" value="Piano" onclick="selectInstrument(this)" checked />
+        <label for="piano">Piano</label>
+        <input type="radio" id="ag" name="instrument" value="AcousticGuitar" onclick="selectInstrument(this)" />
+        <label for="ag">Acoustic Guitar</label>
+        <input type="radio" id="eg" name="instrument" value="ElectricGuitar" onclick="selectInstrument(this)" />
+        <label for="eg">Electric Guitar</label>
+    </div>
 </body>
 
 </html>

@@ -28,3 +28,7 @@ button.row2 {
 button.row3 {
   background-color: #afe1af;
 }
+
+#instruments {
+  float: right;
+}
